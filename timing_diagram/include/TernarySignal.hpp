@@ -30,6 +30,9 @@ public:
     void decrease_duration(size_t decrease_amount);
 
     std::string draw() const;
+
+    TernarySignalState getState() const { return state; }
+    size_t getDuration() const { return duration; }
 };
 
 #endif //TERNARY_SIGNAL_H

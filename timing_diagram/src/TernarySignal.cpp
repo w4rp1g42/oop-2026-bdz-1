@@ -1,4 +1,4 @@
-#include "TernarySignal.h"
+#include "TernarySignal.hpp"
 
 #include <csignal>
 #include <stdexcept>
