@@ -35,7 +35,7 @@ TernarySignal::TernarySignal(const std::string &signal_string) {
 }
 
 TernarySignal TernarySignal::split(const size_t moment) {
-    if (moment >= duration) throw std::invalid_argument("split moment must be inside duration");
+    if (moment >= duration) throw std::logic_error("split moment must be inside duration");
 
     const TernarySignal second_part{state, duration - moment};
     this->duration = moment;
@@ -48,7 +48,7 @@ void TernarySignal::increase_duration(const size_t increase_amount) {
 }
 
 void TernarySignal::decrease_duration(const size_t decrease_amount) {
-    if (decrease_amount >= duration) throw std::invalid_argument("decrease can't be more than duration");
+    if (decrease_amount >= duration) throw std::logic_error("decrease can't be more than duration");
     duration -= decrease_amount;
 }
 
