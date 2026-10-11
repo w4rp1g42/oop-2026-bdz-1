@@ -13,6 +13,7 @@ char TernarySignal::get_state_symbol(const TernarySignalState raw_state) {
 }
 
 TernarySignal::TernarySignal(const std::string &signal_string) {
+    if (signal_string.empty()) throw std::logic_error("signal can not be empty");
     const char signal_state = signal_string.front();
 
     switch (signal_state) {

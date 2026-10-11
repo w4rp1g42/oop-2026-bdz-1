@@ -24,9 +24,7 @@ TEST_CASE("Ternary Signal Constructors") {
         REQUIRE(ternary_signal.getDuration() == 5);
     }
     SECTION("Signal String: empty signal") {
-        const TernarySignal ternary_signal{std::string{}};
-        REQUIRE(ternary_signal.getState() == SIGNAL_ONE);
-        REQUIRE(ternary_signal.getDuration() == 5);
+        REQUIRE_THROWS_AS(TernarySignal {std::string{}}, std::logic_error);
     }
 }
 
