@@ -39,6 +39,10 @@ TEST_CASE("Ternary Signal Split") {
         REQUIRE(second_part.getState() == SIGNAL_ONE);
         REQUIRE(second_part.getDuration() == 2);
     }
+    SECTION("Split: moment >= duration") {
+        TernarySignal first_part{"111110000XXX"};
+        REQUIRE_THROWS_AS(first_part.split(10), std::logic_error);
+    }
 }
 
 TEST_CASE("Ternary Signal Duration") {
