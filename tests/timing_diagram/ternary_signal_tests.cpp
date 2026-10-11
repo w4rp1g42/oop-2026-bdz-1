@@ -1,0 +1,94 @@
+#include <catch2/catch_all.hpp>
+
+#include "TernarySignal.hpp"
+
+TEST_CASE("Ternary Signal Constructors") {
+    SECTION("Empty") {
+        const TernarySignal ternary_signal{};
+        REQUIRE(ternary_signal.getDuration() == 0);
+        REQUIRE(ternary_signal.getState() == '0');
+    }
+    SECTION("State And Duration") {
+        const TernarySignal ternary_signal{SIGNAL_ZERO, 15};
+        REQUIRE(ternary_signal.getState() == SIGNAL_ZERO);
+        REQUIRE(ternary_signal.getDuration() == 15);
+    }
+    SECTION("Signal String: 1 state") {
+        const TernarySignal ternary_signal{"11111"};
+        REQUIRE(ternary_signal.getState() == SIGNAL_ONE);
+        REQUIRE(ternary_signal.getDuration() == 5);
+    }
+    SECTION("Signal String: >1 states") {
+        const TernarySignal ternary_signal{"111110000XXX"};
+        REQUIRE(ternary_signal.getState() == SIGNAL_ONE);
+        REQUIRE(ternary_signal.getDuration() == 5);
+    }
+    SECTION("Signal String: empty signal") {
+        const TernarySignal ternary_signal{std::string{}};
+        REQUIRE(ternary_signal.getState() == SIGNAL_ONE);
+        REQUIRE(ternary_signal.getDuration() == 5);
+    }
+}
+
+TEST_CASE("Ternary Signal Split") {
+    SECTION("Split: normal") {
+        TernarySignal first_part{"111110000XXX"};
+        const TernarySignal second_part = first_part.split(3);
+
+        REQUIRE(first_part.getState() == SIGNAL_ONE);
+        REQUIRE(first_part.getDuration() == 3);
+
+        REQUIRE(second_part.getState() == SIGNAL_ONE);
+        REQUIRE(second_part.getDuration() == 2);
+    }
+    SECTION("Split: empty signal") {
+        TernarySignal first_part{std::string{}};
+        REQUIRE_THROWS_AS(first_part.split(5), std::logic_error);
+    }
+}
+
+TEST_CASE("Ternary Signal Duration") {
+    SECTION("Increase: normal") {
+        TernarySignal ternary_signal{"111110000XXX"};
+        ternary_signal.increase_duration(7);
+        REQUIRE(ternary_signal.getDuration() == 12);
+    }
+    SECTION("Increase: add zero") {
+        TernarySignal ternary_signal{"111110000XXX"};
+        ternary_signal.increase_duration(0);
+        REQUIRE(ternary_signal.getDuration() == 5);
+    }
+    SECTION("Decrease: normal") {
+        TernarySignal ternary_signal{"111110000XXX"};
+        ternary_signal.decrease_duration(3);
+        REQUIRE(ternary_signal.getDuration() == 2);
+    }
+    SECTION("Decrease: subtract zero") {
+        TernarySignal ternary_signal{"111110000XXX"};
+        ternary_signal.decrease_duration(0);
+        REQUIRE(ternary_signal.getDuration() == 5);
+    }
+    SECTION("Decrease: subtract > duration") {
+        TernarySignal ternary_signal{"111110000XXX"};
+        REQUIRE_THROWS_AS(ternary_signal.decrease_duration(10), std::logic_error);
+    }
+}
+
+TEST_CASE("Ternary Signal Draw") {
+    SECTION("Draw: SIGNAL_ONE") {
+        const TernarySignal ternary_signal{"111110000XXX"};
+        REQUIRE(ternary_signal.draw() == "\'\'\'\'\'");
+    }
+    SECTION("Draw: SIGNAL_ZERO") {
+        const TernarySignal ternary_signal{"0000XXX"};
+        REQUIRE(ternary_signal.draw() == "____");
+    }
+    SECTION("Draw: SIGNAL_UNDEFINED") {
+        const TernarySignal ternary_signal{"XXX"};
+        REQUIRE(ternary_signal.draw() == "---");
+    }
+    SECTION("Draw: empty signal") {
+        const TernarySignal ternary_signal{std::string{}};
+        REQUIRE(ternary_signal.draw().empty());
+    }
+}
