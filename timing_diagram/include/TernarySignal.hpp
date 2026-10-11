@@ -4,9 +4,9 @@
 #include <string>
 
 enum TernarySignalState {
-    SIGNAL_ZERO = '0',
-    SIGNAL_ONE = '1',
-    SIGNAL_UNDEFINED = 'X'
+    SIGNAL_ZERO = 0,
+    SIGNAL_ONE = 1,
+    SIGNAL_UNDEFINED = 2
 };
 
 class TernarySignal {

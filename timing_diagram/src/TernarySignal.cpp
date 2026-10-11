@@ -7,8 +7,9 @@ char TernarySignal::get_state_symbol(const TernarySignalState raw_state) {
     switch (raw_state) {
         case SIGNAL_ZERO: return '_';
         case SIGNAL_ONE: return '\'';
-        default: return '-';
+        case SIGNAL_UNDEFINED: return '-';
     }
+    throw std::logic_error("state does not exist");
 }
 
 TernarySignal::TernarySignal(const std::string &signal_string) {

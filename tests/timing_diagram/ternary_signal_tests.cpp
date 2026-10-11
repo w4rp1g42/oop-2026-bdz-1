@@ -6,7 +6,7 @@ TEST_CASE("Ternary Signal Constructors") {
     SECTION("Empty") {
         const TernarySignal ternary_signal{};
         REQUIRE(ternary_signal.getDuration() == 0);
-        REQUIRE(ternary_signal.getState() == '0');
+        REQUIRE(ternary_signal.getState() == SIGNAL_ZERO);
     }
     SECTION("State And Duration") {
         const TernarySignal ternary_signal{SIGNAL_ZERO, 15};
