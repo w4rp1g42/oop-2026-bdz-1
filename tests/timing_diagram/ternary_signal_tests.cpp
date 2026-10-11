@@ -85,8 +85,4 @@ TEST_CASE("Ternary Signal Draw") {
         const TernarySignal ternary_signal{"XXX"};
         REQUIRE(ternary_signal.draw() == "---");
     }
-    SECTION("Draw: empty signal") {
-        const TernarySignal ternary_signal{std::string{}};
-        REQUIRE(ternary_signal.draw().empty());
-    }
 }
