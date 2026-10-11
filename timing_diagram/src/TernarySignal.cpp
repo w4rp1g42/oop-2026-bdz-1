@@ -30,6 +30,7 @@ TernarySignal::TernarySignal(const std::string &signal_string) {
     }
 
     duration = signal_string.find_first_not_of(signal_state);
+    if (duration == std::string::npos) duration = signal_string.length();
 }
 
 TernarySignal TernarySignal::split(const size_t moment) {
