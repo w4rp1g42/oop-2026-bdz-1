@@ -8,10 +8,13 @@ TEST_CASE("Ternary Signal Constructors") {
         REQUIRE(ternary_signal.getDuration() == 0);
         REQUIRE(ternary_signal.getState() == SIGNAL_ZERO);
     }
-    SECTION("State And Duration") {
+    SECTION("State And Duration: normal") {
         const TernarySignal ternary_signal{SIGNAL_ZERO, 15};
         REQUIRE(ternary_signal.getState() == SIGNAL_ZERO);
         REQUIRE(ternary_signal.getDuration() == 15);
+    }
+    SECTION("State And Duration: zero duration") {
+        REQUIRE_THROWS_AS(TernarySignal(SIGNAL_ZERO, 0), std::logic_error);
     }
     SECTION("Signal String: 1 state") {
         const TernarySignal ternary_signal{"11111"};
@@ -86,3 +89,4 @@ TEST_CASE("Ternary Signal Draw") {
         REQUIRE(ternary_signal.draw() == "---");
     }
 }
+

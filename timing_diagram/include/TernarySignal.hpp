@@ -1,6 +1,7 @@
 #ifndef TERNARY_SIGNAL_H
 #define TERNARY_SIGNAL_H
 
+#include <stdexcept>
 #include <string>
 
 enum TernarySignalState {
@@ -19,6 +20,7 @@ public:
     TernarySignal() = default;
 
     TernarySignal(const TernarySignalState state, const size_t duration) : state(state), duration(duration) {
+        if (duration == 0) throw std::logic_error("can not make signal with duration of 0");
     }
 
     explicit TernarySignal(const std::string &signal_string);
