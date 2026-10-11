@@ -7,8 +7,12 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(Catch2)
 list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
 
-#add_executable(tests test.cpp)
-#target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
-#include(CTest)
-#include(Catch)
-#catch_discover_tests(tests)
+add_executable(tests timing_diagram/ternary_signal_tests.cpp)
+target_link_libraries(tests PRIVATE timing_diagram Catch2::Catch2WithMain)
+
+add_compile_options(--coverage)
+add_link_options(--coverage)
+
+include(CTest)
+include(Catch)
+catch_discover_tests(tests)
