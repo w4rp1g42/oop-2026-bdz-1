@@ -8,7 +8,7 @@ TimingDiagram::TimingDiagram(const std::string &signal_string) {
     size_t start = 0, end = 0;
     end = signal_string.find_first_not_of(signal_string.front());
     while (end != std::string::npos) {
-        signals.emplace_back(signal_string.substr(start, end));
+        signals.emplace_back(signal_string.substr(start, end - start));
         start = end;
         end = signal_string.find_first_not_of(signal_string[start], start);
     }
@@ -138,7 +138,6 @@ TimingDiagram TimingDiagram::operator>>(const size_t shift) const {
 
         return diagram_copy;
     }
-
 
     while (shifted < shift && !signals_copy.empty()) {
         TernarySignal &signal = signals_copy.back();
