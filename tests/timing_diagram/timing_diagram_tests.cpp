@@ -183,8 +183,9 @@ TEST_CASE("Timing Diagram Replace With Other") {
 TEST_CASE("Timing Diagram Shifts") {
     SECTION("Shift >>: normal") {
         TimingDiagram timing_diagram{"111110000XXX"};
-        timing_diagram >> 5;
-        const auto signals = timing_diagram.getSignals();
+        TimingDiagram result = timing_diagram >> 5;
+
+        const auto signals = result.getSignals();
         REQUIRE(signals[0].getDuration() == 10);
         REQUIRE(signals[0].getState() == SIGNAL_ONE);
         REQUIRE(signals[1].getDuration() == 2);
@@ -192,8 +193,9 @@ TEST_CASE("Timing Diagram Shifts") {
     }
     SECTION("Shift >>: remove signal") {
         TimingDiagram timing_diagram{"111110000XXX"};
-        timing_diagram >> 3;
-        const auto signals = timing_diagram.getSignals();
+        TimingDiagram result = timing_diagram >> 3;
+
+        const auto signals = result.getSignals();
         REQUIRE(signals[0].getDuration() == 8);
         REQUIRE(signals[0].getState() == SIGNAL_ONE);
         REQUIRE(signals[1].getDuration() == 4);
@@ -201,8 +203,9 @@ TEST_CASE("Timing Diagram Shifts") {
     }
     SECTION("Shift <<: normal") {
         TimingDiagram timing_diagram{"111110000XXX"};
-        timing_diagram << 3;
-        const auto signals = timing_diagram.getSignals();
+        TimingDiagram result = timing_diagram << 3;
+
+        const auto signals = result.getSignals();
         REQUIRE(signals[0].getDuration() == 2);
         REQUIRE(signals[0].getState() == SIGNAL_ONE);
         REQUIRE(signals[1].getDuration() == 4);
@@ -212,8 +215,9 @@ TEST_CASE("Timing Diagram Shifts") {
     }
     SECTION("Shift <<: remove signal") {
         TimingDiagram timing_diagram{"111110000XXX"};
-        timing_diagram << 5;
-        const auto signals = timing_diagram.getSignals();
+        TimingDiagram result = timing_diagram << 5;
+
+        const auto signals = result.getSignals();
         REQUIRE(signals[0].getDuration() == 4);
         REQUIRE(signals[0].getState() == SIGNAL_ZERO);
         REQUIRE(signals[1].getDuration() == 8);

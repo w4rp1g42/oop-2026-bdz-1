@@ -22,9 +22,9 @@ public:
 
     TimingDiagram operator *(size_t times) const;
 
-    TimingDiagram &operator <<(size_t shift);
+    TimingDiagram operator <<(size_t shift) const;
 
-    TimingDiagram &operator >>(size_t shift);
+    TimingDiagram operator >>(size_t shift) const;
 
     std::vector<TernarySignal> getSignals() const {
         return signals;

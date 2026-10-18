@@ -96,37 +96,42 @@ TimingDiagram TimingDiagram::operator*(const size_t times) const {
     return new_timing_diagram;
 }
 
-TimingDiagram &TimingDiagram::operator<<(const size_t shift) {
+TimingDiagram TimingDiagram::operator<<(const size_t shift) const {
     size_t shifted = 0;
 
+    TimingDiagram diagram_copy = *this;
+
     while (shifted < shift && !signals.empty()) {
-        TernarySignal &signal = signals.front();
+        TernarySignal &signal = diagram_copy.signals.front();
         const size_t shift_per_signal = shift - shifted;
         if (signal.getDuration() <= shift_per_signal) {
             shifted += signal.getDuration();
-            signals.erase(signals.begin());
+            diagram_copy.signals.erase(diagram_copy.signals.begin());
         } else {
             shifted += shift_per_signal;
             signal.decrease_duration(shift_per_signal);
         }
     }
-    if (!signals.empty()) signals.back().increase_duration(shift);
-    return *this;
+    if (!diagram_copy.signals.empty()) diagram_copy.signals.back().increase_duration(shift);
+    return diagram_copy;
 }
 
-TimingDiagram &TimingDiagram::operator>>(const size_t shift) {
+TimingDiagram TimingDiagram::operator>>(const size_t shift) const {
     size_t shifted = 0;
+
+    TimingDiagram diagram_copy = *this;
+
     while (shifted < shift && !signals.empty()) {
-        TernarySignal &signal = signals.back();
+        TernarySignal &signal = diagram_copy.signals.back();
         const size_t shift_per_signal = shift - shifted;
         if (signal.getDuration() <= shift_per_signal) {
             shifted += signal.getDuration();
-            signals.pop_back();
+            diagram_copy.signals.pop_back();
         } else {
             shifted += shift_per_signal;
             signal.decrease_duration(shift_per_signal);
         }
     }
-    if (!signals.empty()) signals.front().increase_duration(shift);
-    return *this;
+    if (!diagram_copy.signals.empty()) diagram_copy.signals.front().increase_duration(shift);
+    return diagram_copy;
 }
