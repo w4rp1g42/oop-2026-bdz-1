@@ -84,7 +84,8 @@ void TimingDiagram::replaceWithOther(const TimingDiagram &other, const size_t st
 }
 
 TimingDiagram &TimingDiagram::operator+=(const TimingDiagram &other) {
-    signals.insert(signals.end(), other.signals.begin(), other.signals.end());
+    std::vector<TernarySignal> other_copy = other.signals;
+    signals.insert(signals.end(), other_copy.begin(), other_copy.end());
     return *this;
 }
 
