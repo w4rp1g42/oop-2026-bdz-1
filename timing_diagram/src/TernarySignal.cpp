@@ -44,6 +44,7 @@ TernarySignal::TernarySignal(const std::string &signal_string) {
 }
 
 TernarySignal TernarySignal::split(const size_t moment) {
+    if (duration == 0) throw std::logic_error("can't split empty signal");
     if (moment >= duration) throw std::logic_error("split moment must be inside duration");
 
     const TernarySignal second_part{state, duration - moment};
@@ -57,12 +58,15 @@ void TernarySignal::increase_duration(const size_t increase_amount) {
 }
 
 void TernarySignal::decrease_duration(const size_t decrease_amount) {
+    if (duration == 0) throw std::logic_error("can't decrease duration of empty signal");
     if (decrease_amount >= duration) throw std::logic_error("decrease can't be more than duration");
     duration -= decrease_amount;
 }
 
 std::string TernarySignal::draw() const {
     std::string signal_visual{};
+    if (duration == 0) return signal_visual;
+
     signal_visual.reserve(duration);
 
     for (int i = 0; i < duration; i++) {

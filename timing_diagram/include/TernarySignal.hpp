@@ -11,13 +11,14 @@ enum TernarySignalState {
 };
 
 class TernarySignal {
-    TernarySignalState state;
-    size_t duration;
+    TernarySignalState state = SIGNAL_ZERO;
+    size_t duration = 0;
 
     static char get_state_symbol(TernarySignalState raw_state);
     static bool is_valid_state(TernarySignalState raw_state);
 
 public:
+    // the only way to get zero duration signal
     TernarySignal() = default;
 
     TernarySignal(const TernarySignalState state, const size_t duration) : state(state), duration(duration) {

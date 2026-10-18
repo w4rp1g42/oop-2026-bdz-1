@@ -73,6 +73,10 @@ TEST_CASE("Ternary Signal Duration") {
         TernarySignal ternary_signal{"111110000XXX"};
         REQUIRE_THROWS_AS(ternary_signal.decrease_duration(10), std::logic_error);
     }
+    SECTION("Decrease: empty signal") {
+        TernarySignal ternary_signal{};
+        REQUIRE_THROWS_AS(ternary_signal.decrease_duration(10), std::logic_error);
+    }
 }
 
 TEST_CASE("Ternary Signal Draw") {
@@ -87,6 +91,10 @@ TEST_CASE("Ternary Signal Draw") {
     SECTION("Draw: SIGNAL_UNDEFINED") {
         const TernarySignal ternary_signal{"XXX"};
         REQUIRE(ternary_signal.draw() == "---");
+    }
+    SECTION("Draw: Empty") {
+        const TernarySignal ternary_signal{};
+        REQUIRE(ternary_signal.draw() == "");
     }
 }
 
