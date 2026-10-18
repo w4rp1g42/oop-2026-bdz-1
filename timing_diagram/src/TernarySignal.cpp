@@ -45,7 +45,7 @@ TernarySignal::TernarySignal(const std::string &signal_string) {
 
 TernarySignal TernarySignal::split(const size_t moment) {
     if (duration == 0) throw std::logic_error("can't split empty signal");
-    if (moment >= duration) throw std::logic_error("split moment must be inside duration");
+    if (moment == 0 or moment >= duration) throw std::logic_error("split moment must be inside duration");
 
     const TernarySignal second_part{state, duration - moment};
     this->duration = moment;
