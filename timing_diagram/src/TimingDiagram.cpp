@@ -101,7 +101,7 @@ TimingDiagram TimingDiagram::operator<<(const size_t shift) const {
 
     TimingDiagram diagram_copy = *this;
 
-    while (shifted < shift && !signals.empty()) {
+    while (shifted < shift && !diagram_copy.signals.empty()) {
         TernarySignal &signal = diagram_copy.signals.front();
         const size_t shift_per_signal = shift - shifted;
         if (signal.getDuration() <= shift_per_signal) {
@@ -121,7 +121,7 @@ TimingDiagram TimingDiagram::operator>>(const size_t shift) const {
 
     TimingDiagram diagram_copy = *this;
 
-    while (shifted < shift && !signals.empty()) {
+    while (shifted < shift && !diagram_copy.signals.empty()) {
         TernarySignal &signal = diagram_copy.signals.back();
         const size_t shift_per_signal = shift - shifted;
         if (signal.getDuration() <= shift_per_signal) {
