@@ -15,6 +15,7 @@ class TernarySignal {
     size_t duration;
 
     static char get_state_symbol(TernarySignalState raw_state);
+    static bool is_valid_state(TernarySignalState raw_state);
 
 public:
     TernarySignal() = default;
@@ -38,7 +39,7 @@ public:
     size_t getDuration() const { return duration; }
 
     void setState(const TernarySignalState new_state) {
-        get_state_symbol(new_state); // will throw if incorrect state
+        if (!is_valid_state(new_state)) throw std::logic_error("invalid state");
         state = new_state;
     }
 

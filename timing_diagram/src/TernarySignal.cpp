@@ -4,12 +4,21 @@
 #include <stdexcept>
 
 char TernarySignal::get_state_symbol(const TernarySignalState raw_state) {
+    if (!is_valid_state(raw_state)) throw std::logic_error("state does not exist");
     switch (raw_state) {
         case SIGNAL_ZERO: return '_';
         case SIGNAL_ONE: return '\'';
         case SIGNAL_UNDEFINED: return '-';
     }
-    throw std::logic_error("state does not exist");
+}
+
+bool TernarySignal::is_valid_state(const TernarySignalState raw_state) {
+    switch (raw_state) {
+        case SIGNAL_ZERO:
+        case SIGNAL_ONE:
+        case SIGNAL_UNDEFINED: return true;
+    }
+    return false;
 }
 
 TernarySignal::TernarySignal(const std::string &signal_string) {
