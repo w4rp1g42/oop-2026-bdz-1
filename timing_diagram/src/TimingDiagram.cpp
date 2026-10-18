@@ -1,4 +1,5 @@
 #include <ranges>
+#include <numeric>
 
 #include "TimingDiagram.hpp"
 
