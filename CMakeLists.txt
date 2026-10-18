@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 4.4)
-project(bdz1)
+project(bdz1 CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 
