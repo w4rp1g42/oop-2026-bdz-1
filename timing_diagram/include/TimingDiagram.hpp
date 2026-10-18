@@ -7,7 +7,6 @@
 
 class TimingDiagram {
     std::vector<TernarySignal> signals;
-
 public:
     TimingDiagram() = default;
 
@@ -15,19 +14,23 @@ public:
         signals.emplace_back(state, duration);
     }
 
-    explicit TimingDiagram(const std::string &signal_string) {
-        signals.emplace_back(signal_string);
-    }
+    explicit TimingDiagram(const std::string &signal_string);
 
-    void replaceWithOther(const TimingDiagram &other, size_t start);
+    void replaceWithOther(const TimingDiagram &other, size_t start, size_t end);
 
     TimingDiagram &operator +=(const TimingDiagram &other);
 
-    TimingDiagram &operator *(const TimingDiagram &other) const;
+    TimingDiagram operator *(size_t times) const;
 
-    TimingDiagram &operator <<(size_t duration);
+    TimingDiagram &operator <<(size_t shift);
 
-    TimingDiagram &operator >>(size_t duration);
+    TimingDiagram &operator >>(size_t shift);
+
+    std::vector<TernarySignal> getSignals() const {
+        return signals;
+    }
+
+    size_t getTotalDuration() const;
 };
 
 #endif //TIMINGDIAGRAM_H
