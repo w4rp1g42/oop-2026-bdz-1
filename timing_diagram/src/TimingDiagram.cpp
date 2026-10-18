@@ -16,8 +16,8 @@ TimingDiagram::TimingDiagram(const std::string &signal_string) {
 }
 
 size_t TimingDiagram::getTotalDuration() const {
-    return std::accumulate(signals.begin(), signals.end(), 0,
-                           [](const size_t total, const TernarySignal signal) {
+    return std::accumulate(signals.begin(), signals.end(), static_cast<size_t>(0),
+                           [](const size_t total, const TernarySignal& signal) {
                                return total + signal.getDuration();
                            });
 }
