@@ -201,6 +201,34 @@ TEST_CASE("Timing Diagram Shifts") {
         REQUIRE(signals[1].getDuration() == 4);
         REQUIRE(signals[1].getState() == SIGNAL_ZERO);
     }
+    SECTION("Shift >>: shift > total duration") {
+        TimingDiagram timing_diagram{"111110000XXX"};
+        TimingDiagram result = timing_diagram >> 20;
+
+        const auto signals = result.getSignals();
+        REQUIRE(signals[0].getDuration() == 12);
+        REQUIRE(signals[0].getState() == SIGNAL_ONE);
+    }
+    SECTION("Shift >>: shift == total duration") {
+        TimingDiagram timing_diagram{"111110000XXX"};
+        TimingDiagram result = timing_diagram >> 12;
+
+        const auto signals = result.getSignals();
+        REQUIRE(signals[0].getDuration() == 12);
+        REQUIRE(signals[0].getState() == SIGNAL_ONE);
+    }
+    SECTION("Shift >>: shift == 0") {
+        TimingDiagram timing_diagram{"111110000XXX"};
+        TimingDiagram result = timing_diagram >> 0;
+
+        const auto signals = result.getSignals();
+        REQUIRE(signals[0].getDuration() == 5);
+        REQUIRE(signals[0].getState() == SIGNAL_ONE);
+        REQUIRE(signals[1].getDuration() == 4);
+        REQUIRE(signals[1].getState() == SIGNAL_ZERO);
+        REQUIRE(signals[2].getDuration() == 3);
+        REQUIRE(signals[2].getState() == SIGNAL_UNDEFINED);
+    }
     SECTION("Shift <<: normal") {
         TimingDiagram timing_diagram{"111110000XXX"};
         TimingDiagram result = timing_diagram << 3;
@@ -222,5 +250,33 @@ TEST_CASE("Timing Diagram Shifts") {
         REQUIRE(signals[0].getState() == SIGNAL_ZERO);
         REQUIRE(signals[1].getDuration() == 8);
         REQUIRE(signals[1].getState() == SIGNAL_UNDEFINED);
+    }
+    SECTION("Shift <<: shift > total duration") {
+        TimingDiagram timing_diagram{"111110000XXX"};
+        TimingDiagram result = timing_diagram << 20;
+
+        const auto signals = result.getSignals();
+        REQUIRE(signals[0].getDuration() == 12);
+        REQUIRE(signals[0].getState() == SIGNAL_UNDEFINED);
+    }
+    SECTION("Shift <<: shift == total duration") {
+        TimingDiagram timing_diagram{"111110000XXX"};
+        TimingDiagram result = timing_diagram << 12;
+
+        const auto signals = result.getSignals();
+        REQUIRE(signals[0].getDuration() == 12);
+        REQUIRE(signals[0].getState() == SIGNAL_UNDEFINED);
+    }
+    SECTION("Shift <<: shift == 0") {
+        TimingDiagram timing_diagram{"111110000XXX"};
+        TimingDiagram result = timing_diagram << 0;
+
+        const auto signals = result.getSignals();
+        REQUIRE(signals[0].getDuration() == 5);
+        REQUIRE(signals[0].getState() == SIGNAL_ONE);
+        REQUIRE(signals[1].getDuration() == 4);
+        REQUIRE(signals[1].getState() == SIGNAL_ZERO);
+        REQUIRE(signals[2].getDuration() == 3);
+        REQUIRE(signals[2].getState() == SIGNAL_UNDEFINED);
     }
 }

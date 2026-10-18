@@ -98,40 +98,59 @@ TimingDiagram TimingDiagram::operator*(const size_t times) const {
 
 TimingDiagram TimingDiagram::operator<<(const size_t shift) const {
     size_t shifted = 0;
-
     TimingDiagram diagram_copy = *this;
+    std::vector<TernarySignal> &signals_copy = diagram_copy.signals;
 
-    while (shifted < shift && !diagram_copy.signals.empty()) {
-        TernarySignal &signal = diagram_copy.signals.front();
+    if (const size_t total_duration = diagram_copy.getTotalDuration(); shift >= total_duration) {
+        signals_copy.erase(signals_copy.begin(), signals_copy.end() - 1);
+
+        TernarySignal &last_signal = signals_copy.back();
+        last_signal.increase_duration(total_duration - last_signal.getDuration());
+
+        return diagram_copy;
+    }
+
+    while (shifted < shift && !signals_copy.empty()) {
+        TernarySignal &signal = signals_copy.front();
         const size_t shift_per_signal = shift - shifted;
         if (signal.getDuration() <= shift_per_signal) {
             shifted += signal.getDuration();
-            diagram_copy.signals.erase(diagram_copy.signals.begin());
+            signals_copy.erase(signals_copy.begin());
         } else {
             shifted += shift_per_signal;
             signal.decrease_duration(shift_per_signal);
         }
     }
-    if (!diagram_copy.signals.empty()) diagram_copy.signals.back().increase_duration(shift);
+    if (!signals_copy.empty()) signals_copy.back().increase_duration(shift);
     return diagram_copy;
 }
 
 TimingDiagram TimingDiagram::operator>>(const size_t shift) const {
     size_t shifted = 0;
-
     TimingDiagram diagram_copy = *this;
+    std::vector<TernarySignal> &signals_copy = diagram_copy.signals;
 
-    while (shifted < shift && !diagram_copy.signals.empty()) {
-        TernarySignal &signal = diagram_copy.signals.back();
+    if (const size_t total_duration = diagram_copy.getTotalDuration(); shift >= total_duration) {
+        signals_copy.erase(signals_copy.begin() + 1, signals_copy.end());
+
+        TernarySignal &first_signal = signals_copy.front();
+        first_signal.increase_duration(total_duration - first_signal.getDuration());
+
+        return diagram_copy;
+    }
+
+
+    while (shifted < shift && !signals_copy.empty()) {
+        TernarySignal &signal = signals_copy.back();
         const size_t shift_per_signal = shift - shifted;
         if (signal.getDuration() <= shift_per_signal) {
             shifted += signal.getDuration();
-            diagram_copy.signals.pop_back();
+            signals_copy.pop_back();
         } else {
             shifted += shift_per_signal;
             signal.decrease_duration(shift_per_signal);
         }
     }
-    if (!diagram_copy.signals.empty()) diagram_copy.signals.front().increase_duration(shift);
+    if (!signals_copy.empty()) signals_copy.front().increase_duration(shift);
     return diagram_copy;
 }
