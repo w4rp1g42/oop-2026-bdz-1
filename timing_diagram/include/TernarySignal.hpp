@@ -34,7 +34,18 @@ public:
     std::string draw() const;
 
     TernarySignalState getState() const { return state; }
+
     size_t getDuration() const { return duration; }
+
+    void setState(const TernarySignalState new_state) {
+        get_state_symbol(new_state); // will throw if incorrect state
+        state = new_state;
+    }
+
+    void setDuration(const size_t new_duration) {
+        if (new_duration == 0) throw std::logic_error("can not make signal with duration of 0");
+        duration = new_duration;
+    }
 };
 
 #endif //TERNARY_SIGNAL_H

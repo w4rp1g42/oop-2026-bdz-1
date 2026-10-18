@@ -90,3 +90,26 @@ TEST_CASE("Ternary Signal Draw") {
     }
 }
 
+TEST_CASE("Ternary Signal Setters") {
+    SECTION("Setter: duration, normal") {
+        TernarySignal ternary_signal{"111110000XXX"};
+        ternary_signal.setDuration(1);
+        REQUIRE(ternary_signal.getDuration() == 1);
+        REQUIRE(ternary_signal.getState() == SIGNAL_ONE);
+    }
+    SECTION("Setter: duration, zero duration") {
+        TernarySignal ternary_signal{"111110000XXX"};
+        REQUIRE_THROWS(ternary_signal.setDuration(0));
+    }
+    SECTION("Setter: state, normal") {
+        TernarySignal ternary_signal{"111110000XXX"};
+        ternary_signal.setState(SIGNAL_ZERO);
+        REQUIRE(ternary_signal.getDuration() == 5);
+        REQUIRE(ternary_signal.getState() == SIGNAL_ZERO);
+    }
+    SECTION("Setter: state, incorrect state") {
+        TernarySignal ternary_signal{"111110000XXX"};
+        REQUIRE_THROWS(ternary_signal.setState(static_cast<TernarySignalState>(5)));
+    }
+}
+
