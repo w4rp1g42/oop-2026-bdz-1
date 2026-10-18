@@ -29,49 +29,58 @@ void TimingDiagram::replaceWithOther(const TimingDiagram &other, const size_t st
             "diagram to insert can't be larger than insert section");
     if (end > getTotalDuration()) throw std::logic_error("range exceeds duration");
 
+    // copy for strong exception safety
+    std::vector signals_copy{signals};
+
     size_t time_marker = 0;
-    std::vector<TernarySignal>::iterator it;
-    for (auto cur = signals.begin(); cur != signals.end(); ++cur) {
-        if (cur->getDuration() < start - time_marker) {
+    size_t idx = 0;
+
+    for (size_t i = 0; i < signals_copy.size(); ++i) {
+        if (signals_copy[i].getDuration() <= start - time_marker) {
             // skip if before area
-            time_marker += cur->getDuration();
+            time_marker += signals_copy[i].getDuration();
             continue;
         }
         // split if on border of area, remove second part, which is in area
         if (start > time_marker) {
-            const TernarySignal second_part = cur->split(start - time_marker);
-            time_marker += cur->getDuration();
-            it = signals.insert(cur + 1, second_part);
+            const TernarySignal second_part = signals_copy[i].split(start - time_marker);
+            time_marker += signals_copy[i].getDuration();
+            signals_copy.insert(signals_copy.begin() + i + 1, second_part);
+            idx = i + 1;
         } else {
-            it = cur;
+            idx = i;
         }
 
         break;
     }
 
-    auto insert_start = it;
+    size_t insert_idx = idx;
 
     // remove everything from area
     while (true) {
-        if (it != signals.end() and it->getDuration() < end - time_marker) {
+        if (idx < signals_copy.size() && signals_copy[idx].getDuration() <= end - time_marker) {
             // remove if in area
-            time_marker += it->getDuration();
-            it = signals.erase(it);
+            time_marker += signals_copy[idx].getDuration();
+            signals_copy.erase(signals_copy.begin() + idx);
             continue;
         }
 
-        if (end > time_marker) {
-            const TernarySignal last = it->split(end - time_marker);
-            it = signals.erase(it);
-            signals.insert(it, last);
+        if (idx < signals_copy.size() && end > time_marker) {
+            const TernarySignal last = signals_copy[idx].split(end - time_marker);
+            signals_copy.erase(signals_copy.begin() + idx);
+            signals_copy.insert(signals_copy.begin() + idx, last);
         }
 
         break;
     }
 
+    // add from other
     for (auto signal: other.getSignals()) {
-        signals.insert(insert_start++, signal);
+        signals_copy.insert(signals_copy.begin() + insert_idx, signal);
+        insert_idx++;
     }
+
+    std::swap(signals, signals_copy);
 }
 
 TimingDiagram &TimingDiagram::operator+=(const TimingDiagram &other) {
