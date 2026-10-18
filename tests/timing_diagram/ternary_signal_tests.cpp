@@ -46,6 +46,14 @@ TEST_CASE("Ternary Signal Split") {
         TernarySignal first_part{"111110000XXX"};
         REQUIRE_THROWS_AS(first_part.split(10), std::logic_error);
     }
+    SECTION("Split: moment == duration") {
+        TernarySignal first_part{"111110000XXX"};
+        REQUIRE_THROWS_AS(first_part.split(5), std::logic_error);
+    }
+    SECTION("Split: moment 0") {
+        TernarySignal first_part{"111110000XXX"};
+        REQUIRE_THROWS_AS(first_part.split(0), std::logic_error);
+    }
 }
 
 TEST_CASE("Ternary Signal Duration") {

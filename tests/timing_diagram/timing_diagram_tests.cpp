@@ -97,6 +97,25 @@ TEST_CASE("Timing Diagram Total Duration") {
         const TimingDiagram timing_diagram1{};
         REQUIRE(timing_diagram1.getTotalDuration() == 0);
     }
+    SECTION("Addition: same + same") {
+        TimingDiagram timing_diagram1{"111110000XXX"};
+
+        timing_diagram1 += timing_diagram1;
+        const auto signals = timing_diagram1.getSignals();
+        REQUIRE(signals.size() == 6);
+        REQUIRE(signals[0].getDuration() == 5);
+        REQUIRE(signals[0].getState() == SIGNAL_ONE);
+        REQUIRE(signals[1].getDuration() == 4);
+        REQUIRE(signals[1].getState() == SIGNAL_ZERO);
+        REQUIRE(signals[2].getDuration() == 3);
+        REQUIRE(signals[2].getState() == SIGNAL_UNDEFINED);
+        REQUIRE(signals[3].getDuration() == 5);
+        REQUIRE(signals[3].getState() == SIGNAL_ONE);
+        REQUIRE(signals[4].getDuration() == 4);
+        REQUIRE(signals[4].getState() == SIGNAL_ZERO);
+        REQUIRE(signals[5].getDuration() == 3);
+        REQUIRE(signals[5].getState() == SIGNAL_UNDEFINED);
+    }
 }
 
 TEST_CASE("Timing Diagram Multiplication") {
