@@ -31,6 +31,9 @@ public:
     }
 
     size_t getTotalDuration() const;
+
+    friend std::ostream &operator <<(std::ostream &stream, const TimingDiagram &diagram);
+    friend std::istream &operator >>(std::istream &stream, TimingDiagram &diagram);
 };
 
 #endif //TIMINGDIAGRAM_H

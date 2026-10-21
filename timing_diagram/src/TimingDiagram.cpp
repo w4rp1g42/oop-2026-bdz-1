@@ -1,5 +1,6 @@
 #include <ranges>
 #include <numeric>
+#include <iostream>
 
 #include "TimingDiagram.hpp"
 
@@ -153,4 +154,57 @@ TimingDiagram TimingDiagram::operator>>(const size_t shift) const {
     }
     if (!signals_copy.empty()) signals_copy.front().increase_duration(shift);
     return diagram_copy;
+}
+
+std::ostream &operator <<(std::ostream &stream, const TimingDiagram &diagram) {
+    for (const auto &signal : diagram.signals) {
+        stream << signal.draw();
+    }
+    stream << std::endl;
+    return stream;
+}
+
+std::istream &operator>>(std::istream &stream, TimingDiagram &diagram) {
+    std::string signal_string;
+    stream >> signal_string;
+    if (!stream) return stream;
+
+    if (signal_string.empty()) {
+        stream.setstate(std::ios::failbit);
+        return stream;
+    }
+
+    std::vector<TernarySignal> new_signals;
+    size_t start = 0;
+    while (start < signal_string.size()) {
+        TernarySignalState state{};
+        std::string same_state_chars{}; // can mix different state input: 111'''' or 0000_00
+        switch (signal_string[start]) {
+            case '0':
+            case '_':
+                state = SIGNAL_ZERO;
+                same_state_chars = "0_";
+                break;
+            case '1':
+            case '\'':
+                state = SIGNAL_ONE;
+                same_state_chars = "1'";
+                break;
+            case 'X':
+            case '-':
+                state = SIGNAL_UNDEFINED;
+                same_state_chars = "X-";
+                break;
+            default:
+                stream.setstate(std::ios::failbit);
+                return stream;
+        }
+        size_t end = signal_string.find_first_not_of(same_state_chars, start);
+        if (end == std::string::npos) end = signal_string.size();
+        new_signals.emplace_back(state, end - start);
+        start = end;
+    }
+
+    diagram.signals = std::move(new_signals);
+    return stream;
 }
