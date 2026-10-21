@@ -320,7 +320,7 @@ TEST_CASE("Timing Diagram Stream Input") {
         stream >> timing_diagram;
 
         REQUIRE(stream.fail() == false);
-        const std::vector<TernarySignal> signals = timing_diagram.getSignals();
+        const auto signals = timing_diagram.getSignals();
         REQUIRE(signals.size() == 3);
         REQUIRE(signals[0].getState() == SIGNAL_ONE);
         REQUIRE(signals[0].getDuration() == 5);
@@ -335,7 +335,7 @@ TEST_CASE("Timing Diagram Stream Input") {
         stream >> timing_diagram;
 
         REQUIRE(stream.fail() == false);
-        const std::vector<TernarySignal> signals = timing_diagram.getSignals();
+        const auto signals = timing_diagram.getSignals();
         REQUIRE(signals.size() == 3);
         REQUIRE(signals[0].getState() == SIGNAL_ONE);
         REQUIRE(signals[0].getDuration() == 5);
