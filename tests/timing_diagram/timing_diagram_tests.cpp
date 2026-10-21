@@ -299,3 +299,63 @@ TEST_CASE("Timing Diagram Shifts") {
         REQUIRE(signals[2].getState() == SIGNAL_UNDEFINED);
     }
 }
+
+TEST_CASE("Timing Diagram Stream Output") {
+    SECTION("Output: normal") {
+        std::ostringstream stream;
+        stream << TimingDiagram{"111110000XXX"};
+        REQUIRE(stream.str() == "\'\'\'\'\'____---\n");
+    }
+    SECTION("Output: empty") {
+        std::ostringstream stream;
+        stream << TimingDiagram{};
+        REQUIRE(stream.str() == "\n");
+    }
+}
+
+TEST_CASE("Timing Diagram Stream Input") {
+    SECTION("Input: valid digits") {
+        TimingDiagram timing_diagram{};
+        std::istringstream stream{"111110000XXX"};
+        stream >> timing_diagram;
+
+        REQUIRE(stream.fail() == false);
+        const std::vector<TernarySignal> signals = timing_diagram.getSignals();
+        REQUIRE(signals.size() == 3);
+        REQUIRE(signals[0].getState() == SIGNAL_ONE);
+        REQUIRE(signals[0].getDuration() == 5);
+        REQUIRE(signals[1].getState() == SIGNAL_ZERO);
+        REQUIRE(signals[1].getDuration() == 4);
+        REQUIRE(signals[2].getState() == SIGNAL_UNDEFINED);
+        REQUIRE(signals[2].getDuration() == 3);
+    }
+    SECTION("Input: valid symbols") {
+        TimingDiagram timing_diagram{};
+        std::istringstream stream{"\'\'\'\'\'____---"};
+        stream >> timing_diagram;
+
+        REQUIRE(stream.fail() == false);
+        const std::vector<TernarySignal> signals = timing_diagram.getSignals();
+        REQUIRE(signals.size() == 3);
+        REQUIRE(signals[0].getState() == SIGNAL_ONE);
+        REQUIRE(signals[0].getDuration() == 5);
+        REQUIRE(signals[1].getState() == SIGNAL_ZERO);
+        REQUIRE(signals[1].getDuration() == 4);
+        REQUIRE(signals[2].getState() == SIGNAL_UNDEFINED);
+        REQUIRE(signals[2].getDuration() == 3);
+    }
+    SECTION("Input: invalid character") {
+        TimingDiagram timing_diagram{};
+        std::istringstream stream{"111222"};
+        stream >> timing_diagram;
+
+        REQUIRE(stream.fail() == true);
+    }
+    SECTION("Input: empty") {
+        TimingDiagram timing_diagram{};
+        std::istringstream stream{std::string{}};
+        stream >> timing_diagram;
+
+        REQUIRE(stream.fail() == true);
+    }
+}
