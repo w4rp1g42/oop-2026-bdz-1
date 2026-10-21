@@ -48,6 +48,9 @@ public:
         if (new_duration == 0) throw std::logic_error("can not make signal with duration of 0");
         duration = new_duration;
     }
+
+    friend std::ostream &operator <<(std::ostream &stream, const TernarySignal &signal);
+    friend std::istream &operator >>(std::istream &stream, TernarySignal &signal);
 };
 
 #endif //TERNARY_SIGNAL_H

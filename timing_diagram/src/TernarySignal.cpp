@@ -1,5 +1,7 @@
 #include "TernarySignal.hpp"
 
+#include <iostream>
+#include <format>
 #include <csignal>
 #include <stdexcept>
 
@@ -74,4 +76,51 @@ std::string TernarySignal::draw() const {
     }
 
     return signal_visual;
+}
+
+std::ostream &operator<<(std::ostream &stream, const TernarySignal &signal) {
+    stream << signal.draw() << std::endl;
+    return stream;
+}
+
+std::istream &operator>>(std::istream &stream, TernarySignal &signal) {
+    // ignoring constructor that can accept different states here
+    // only valid signal strings required
+    std::string signal_string;
+    stream >> signal_string;
+    if (!stream) return stream;
+
+    if (signal_string.empty()) {
+        stream.setstate(std::ios::failbit);
+        return stream;
+    }
+
+    TernarySignalState new_state{};
+    switch (signal_string.front()) {
+        case '0':
+        case '_':
+            new_state = SIGNAL_ZERO;
+            break;
+        case '1':
+        case '\'':
+            new_state = SIGNAL_ONE;
+            break;
+        case 'X':
+        case '-':
+            new_state = SIGNAL_UNDEFINED;
+            break;
+        default:
+            stream.setstate(std::ios::failbit);
+            return stream;
+    }
+
+    const size_t new_duration = signal_string.length();
+    if (signal_string.find_first_not_of(signal_string.front()) != std::string::npos) {
+        stream.setstate(std::ios::failbit);
+        return stream;
+    }
+
+    signal.setState(new_state);
+    signal.setDuration(new_duration);
+    return stream;
 }
