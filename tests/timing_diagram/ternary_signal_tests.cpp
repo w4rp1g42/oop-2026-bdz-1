@@ -129,3 +129,52 @@ TEST_CASE("Ternary Signal Setters") {
     }
 }
 
+TEST_CASE("Ternary Signal Stream Output") {
+    SECTION("Output: normal") {
+        std::ostringstream stream;
+        stream << TernarySignal{"11111"};
+        REQUIRE(stream.str() == "\'\'\'\'\'\n");
+    }
+    SECTION("Output: empty") {
+        std::ostringstream stream;
+        stream << TernarySignal{};
+        REQUIRE(stream.str() == "\n");
+    }
+}
+
+TEST_CASE("Ternary Signal Stream Input") {
+    SECTION("Input: valid digits") {
+        TernarySignal ternary_signal{};
+        std::istringstream stream{"11111"};
+        stream >> ternary_signal;
+        REQUIRE(stream.fail() == false);
+        REQUIRE(ternary_signal.getState() == SIGNAL_ONE);
+        REQUIRE(ternary_signal.getDuration() == 5);
+    }
+    SECTION("Input: valid symbols") {
+        TernarySignal ternary_signal{};
+        std::istringstream stream{"---"};
+        stream >> ternary_signal;
+        REQUIRE(stream.fail() == false);
+        REQUIRE(ternary_signal.getState() == SIGNAL_UNDEFINED);
+        REQUIRE(ternary_signal.getDuration() == 3);
+    }
+    SECTION("Input: invalid character") {
+        TernarySignal ternary_signal{};
+        std::istringstream stream{"2222"};
+        stream >> ternary_signal;
+        REQUIRE(stream.fail() == true);
+    }
+    SECTION("Input: mixed states") {
+        TernarySignal ternary_signal{};
+        std::istringstream stream{"11100"};
+        stream >> ternary_signal;
+        REQUIRE(stream.fail() == true);
+    }
+    SECTION("Input: empty") {
+        TernarySignal ternary_signal{};
+        std::istringstream stream{std::string{}};
+        stream >> ternary_signal;
+        REQUIRE(stream.fail() == true);
+    }
+}
