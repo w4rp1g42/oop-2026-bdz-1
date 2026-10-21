@@ -171,6 +171,14 @@ TEST_CASE("Ternary Signal Stream Input") {
         stream >> ternary_signal;
         REQUIRE(stream.fail() == true);
     }
+    SECTION("Input: mixed representation of same state") {
+        TernarySignal ternary_signal{};
+        std::istringstream stream{"111''''"};
+        stream >> ternary_signal;
+        REQUIRE(stream.fail() == false);
+        REQUIRE(ternary_signal.getState() == SIGNAL_ONE);
+        REQUIRE(ternary_signal.getDuration() == 7);
+    }
     SECTION("Input: empty") {
         TernarySignal ternary_signal{};
         std::istringstream stream{std::string{}};

@@ -84,8 +84,6 @@ std::ostream &operator <<(std::ostream &stream, const TernarySignal &signal) {
 }
 
 std::istream &operator >>(std::istream &stream, TernarySignal &signal) {
-    // ignoring constructor that can accept different states here
-    // only valid signal strings required
     std::string signal_string;
     stream >> signal_string;
     if (!stream) return stream;
@@ -96,31 +94,34 @@ std::istream &operator >>(std::istream &stream, TernarySignal &signal) {
     }
 
     TernarySignalState new_state{};
+    std::string same_state_chars{};
     switch (signal_string.front()) {
         case '0':
         case '_':
             new_state = SIGNAL_ZERO;
+            same_state_chars = "0_";
             break;
         case '1':
         case '\'':
             new_state = SIGNAL_ONE;
+            same_state_chars = "1'";
             break;
         case 'X':
         case '-':
             new_state = SIGNAL_UNDEFINED;
+            same_state_chars = "X-";
             break;
         default:
             stream.setstate(std::ios::failbit);
             return stream;
     }
 
-    const size_t new_duration = signal_string.length();
-    if (signal_string.find_first_not_of(signal_string.front()) != std::string::npos) {
+    if (signal_string.find_first_not_of(same_state_chars) != std::string::npos) {
         stream.setstate(std::ios::failbit);
         return stream;
     }
 
     signal.setState(new_state);
-    signal.setDuration(new_duration);
+    signal.setDuration(signal_string.length());
     return stream;
 }
