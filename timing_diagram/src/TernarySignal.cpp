@@ -78,12 +78,12 @@ std::string TernarySignal::draw() const {
     return signal_visual;
 }
 
-std::ostream &operator<<(std::ostream &stream, const TernarySignal &signal) {
+std::ostream &operator <<(std::ostream &stream, const TernarySignal &signal) {
     stream << signal.draw() << std::endl;
     return stream;
 }
 
-std::istream &operator>>(std::istream &stream, TernarySignal &signal) {
+std::istream &operator >>(std::istream &stream, TernarySignal &signal) {
     // ignoring constructor that can accept different states here
     // only valid signal strings required
     std::string signal_string;
