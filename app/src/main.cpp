@@ -1,6 +1,6 @@
-#include <iostream>
+#include "dialog.hpp"
 
 int main() {
-    std::cout << "Hello World!" << std::endl;
+    start_dialog();
     return 0;
 }
